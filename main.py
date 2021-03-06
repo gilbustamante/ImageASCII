@@ -1,19 +1,10 @@
-"""
-Goal: Take an image as input and return an ASCII representation
-1. Take image and resize it
-2. Convert image to greyscale
-3. Map each pixel (11 groups of 25 == 255) to an ascii character and "".join
-4. Create list of "lines" based on predetermined width and "\n".join
-5. Print
-"""
-
 import sys
 import os
 from PIL import Image
 
 
 def handle_image(filepath):
-    """Main function that loads image and begins conversion"""
+    """Main function that loads image, begins conversion, and writes to file"""
     filepath = os.path.abspath(filepath)
     try:
         image = Image.open(filepath)
@@ -22,8 +13,11 @@ def handle_image(filepath):
         print("Are you sure it's an image?")
         return
 
+    # Convert image to ASCII
     final = create_image(image)
-    print(final)
+
+    # Write to output.txt
+    write_to_file(final)
 
 
 def create_image(image, new_width=100):
@@ -42,7 +36,7 @@ def create_image(image, new_width=100):
     ascii_image = [pixel_chars[i:i+new_width]
                    for i in range(0, len(pixel_chars), new_width)]
 
-    return "\n".join(ascii_image)
+    return ascii_image
 
 
 def resize_image(image, new_width=100):
@@ -56,7 +50,7 @@ def resize_image(image, new_width=100):
 
 
 def convert_greyscale(image):
-    """Quick helper that converts image to greyscale"""
+    """Converts image to greyscale"""
     return image.convert('L')
 
 
@@ -72,6 +66,14 @@ def map_pixels_to_ascii(image, range=25):
     pixel_chars = "".join(pixel_chars)
 
     return pixel_chars
+
+
+def write_to_file(ascii_list):
+    """Write ASCII output to text file"""
+    with open('output.txt', 'w') as f:
+        for line in ascii_list:
+            f.write(f"{line}\n")
+    print('Done')
 
 
 if __name__ == '__main__':
